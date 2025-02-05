@@ -16,7 +16,7 @@ fn add_external_constraints<'a>(
     }
     Bool::and(&context, &clauses)
 }
-pub fn add_constants<'a>(context: &'a Context) -> Vec<Vec<Vec<Bool<'a>>>> {
+fn add_constants<'a>(context: &'a Context) -> Vec<Vec<Vec<Bool<'a>>>> {
     let mut constants = Vec::new();
     for i in 0..9 {
         let mut row = Vec::new();
@@ -32,26 +32,7 @@ pub fn add_constants<'a>(context: &'a Context) -> Vec<Vec<Vec<Bool<'a>>>> {
     }
     constants
 }
-pub fn print_solution<'a>(solver: &'a Solver, constants: &[Vec<Vec<Bool<'a>>>]) {
-    if solver.check() == z3::SatResult::Sat {
-        let model = solver.get_model().unwrap();
-        for i in 0..9 {
-            for j in 0..9 {
-                for k in 1..=9 {
-                    let constant = &constants[i][j][k - 1];
-                    if model.eval(constant, true).unwrap().as_bool().unwrap() {
-                        print!("{}", k);
-                    }
-                }
-                print!(" ");
-            }
-            println!();
-        }
-    } else {
-        println!("No solution found");
-    }
-}
-pub fn get_solution<'a>(solver: &'a Solver, constants: &[Vec<Vec<Bool<'a>>>]) -> Vec<Vec<i32>> {
+fn get_solution<'a>(solver: &'a Solver, constants: &[Vec<Vec<Bool<'a>>>]) -> Vec<Vec<i32>> {
     let mut solution = vec![vec![0; 9]; 9];
     if solver.check() == z3::SatResult::Sat {
         let model = solver.get_model().unwrap();
@@ -76,7 +57,7 @@ pub fn solve_sudoku(sudoku_problem: &[[i32; 9]; 9]) -> Vec<Vec<i32>> {
     add_sudoku_constraints(&context, &solver, &constants, sudoku_problem);
     get_solution(&solver, &constants)
 }
-pub fn add_sudoku_constraints(
+fn add_sudoku_constraints(
     context: &Context,
     solver: &Solver,
     constants: &[Vec<Vec<Bool>>],

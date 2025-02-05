@@ -1,3 +1,4 @@
+mod naive_solver;
 mod z3solver;
 use z3solver::solve_sudoku;
 
